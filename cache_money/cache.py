@@ -178,19 +178,22 @@ class CacheMoney(object):
     def cached(self, key_fn: Callable = _key_fn, timeout: int = None) -> Any:
         """
         Decorator that will transparently cache calls to the wrapped function. By default, the cache key will be made
-        up of the arguments passed in (like memoize), but you can override this by specifying a custom ``key_fn``.
+        up of the arguments passed in (like memoize), but you can override this by specifying a custom `key_fn`.
 
-        Usage::
-            cache = Cache(my_database)
-            @cache.cached(timeout=60)
-            def add_numbers(a, b):
-                return a + b
-            print add_numbers(3, 4)  # Function is called.
-            print add_numbers(3, 4)  # Not called, value is cached.
-            add_numbers.bust(3, 4)  # Clear cache for (3, 4).
-            print add_numbers(3, 4)  # Function is called.
+        Usage:
+            from cache_money import cache_money
+            from cache_money.constants import CACHE_MINUTE
 
-        The decorated function also gains a new attribute named ``bust`` which will clear the cache for the given args.
+            @cache.cached(timeout=CACHE_MINUTE)
+            async def addition(x, y):
+                return x + y
+
+            await addition(3, 4)  # Function is called.
+            await addition(3, 4)  # Not called, value is cached.
+            await add_numbers.bust(3, 4)  # Clear cache for (3, 4).
+            await add_numbers(3, 4)  # Function is called.
+
+        The decorated function also gains a new attribute named `bust` which will clear the cache for the given args.
 
         Args:
             key_fn: Function used to generate a key from the given args and kwargs.
@@ -224,7 +227,7 @@ class CacheMoney(object):
                 if res is None:
                     res = await fn(*args, **kwargs)
 
-                    if res is not None:  # None not cacheable in Cache Money
+                    if res is not None:  # None is not cacheable in Cache Money
                         await self.set(key, res, timeout)
 
                 return res
