@@ -11,7 +11,7 @@ Async cache library for [memoization](https://en.wikipedia.org/wiki/Memoization)
 
 Cache Money is used through a decorator you can add to your function that needs to be cached. When the decorator 
 gets executed, Cache Money will make a unique key from the name of the function and the params received and look up in 
-reddit if there is a result for this key. If there is a result it will be used as the output of the function and the 
+redis if there is a result for this key. If there is a result it will be used as the output of the function and the 
 execution of the function will be skipped.
 
 You can add a timeout in the declaration of the decorator, you can find constants for common timeout duration in 
@@ -55,7 +55,7 @@ async def multiplication(x: int, y: int) -> int:
     return x * y
 ```
 
-If you run the following calls to the function addition consecutively:
+If you run the following calls to the function `addition` consecutively:
 ```
   >> await addition(3, 4)
   7
@@ -86,7 +86,7 @@ In Redis you would see two entries like this:
 
 ## Busting cache for a specific function call
 
-You can force expire(bust) the cache for a specific function call
+You can force expire (bust) the cache for a specific function call
 
 ```
 >> await addition(3, 4)
@@ -113,7 +113,8 @@ You can bust the cache for all instance of a function call
 >> await addition.bust_all()
 ```
 
-In Redis you would see no entries for fn addition which has been busted, you would see one entry for multiplication
+In Redis you would see no entries for the function `addition` which has been busted,
+you would see one entry for `multiplication`
 
 ```
 127.0.0.1:6379> KEYS *
