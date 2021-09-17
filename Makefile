@@ -22,7 +22,7 @@ tests:
 	poetry run pytest --cov-report term-missing --cov cache_money/ tests/
 
 redis-start:
-	docker run -d -p 63798:6379 --name cache_money redis:6.2.5
+	docker run -d -p 63798:6379 --name cache_money_redis redis:6.2.5
 
 redis-stop:
-	docker stop cache_money
+	docker stop cache_money_redis
