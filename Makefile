@@ -1,16 +1,13 @@
 default:
 	@echo "See usage in Makefile"
 
-.PHONY: sys-deps install run format lint tests build
+.PHONY: sys-deps install format lint tests build
 sys-deps:
-	pip install -U pre-commit poetry==1.0.10 tox
+	pip install -U pre-commit poetry==1.0.10 tox tox-docker
 	pre-commit install
 
 install:
 	poetry install
-
-run:
-	poetry run python run.py
 
 LINT_TARGETS = cache_money/ tests/
 format:

@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/novisto/cache-money/badge.svg)](https://coveralls.io/github/novisto/cache-money)
 
 Async cache library for [memoization](https://en.wikipedia.org/wiki/Memoization) using Redis. Inspired by 
-[Walrus](https://github.com/coleifer/walrus) and implemented with aioredis.
+[Walrus](https://github.com/coleifer/walrus) and implemented with [aioredis](https://github.com/aio-libs/aioredis-py).
 
 Cache Money is used through a decorator you can add to your function that needs to be cached. When the decorator 
 gets executed, Cache Money will make a unique key from the name of the function and the params received and look up in 
@@ -11,13 +11,13 @@ reddit if there is a result for this key. If there is a result it will be used a
 execution of the function will be skipped.
 
 You can add a timeout in the declaration of the decorator, you can find constants for common timeout duration in 
-`cache_money.constants.py`. When the timeout is reached, Redis remove the entry itself.
+`cache_money/constants.py`. When the timeout is reached, Redis remove the entry itself.
 
 It's also possible to clear the cache early by using the method bust that gets added to a function decorated by 
 Cache Money. An example is provided below.
 
-This library is available on PyPI under the name cache-money. You can install with pip by running pip install 
-cache-money.
+This library is available on PyPI under the name cache-money. You can install with pip by running `pip install 
+cache-money`.
 
 
 # Requirements
@@ -26,7 +26,7 @@ You need a redis instance running to use this library. This library was tested t
 If you have docker set up you can create a redis instance like this:
 
 ```
-docker run -d -p 6379:6379 redis:6.2.5
+make redis-start
 ```
 
 
@@ -142,6 +142,6 @@ To set yourself up for development on Cache Money, make sure you are using
 [poetry](https://poetry.eustace.io/docs/) and simply run the following commands from the root directory:
 
 ```bash
-make bootstrap
+make sys-deps
 make install
 ```

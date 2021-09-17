@@ -11,8 +11,6 @@ trigger:
       - master
 
 variables:
-  dockerRegistryServiceConnection: '0718fd53-7517-42de-9ace-096cfbd39374'
-  containerRegistry: 'novisto.azurecr.io'
   vmImageName: 'ubuntu-latest'
 
 stages:

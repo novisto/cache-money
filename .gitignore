@@ -121,6 +121,4 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
-local.yml
-unit_test.yml
 *.orig
