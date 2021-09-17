@@ -29,7 +29,7 @@ cache-money`.
 You need a redis instance running to use this library. This library was tested to run on version of Redis >= 4.0.0. 
 If you have docker set up you can create a redis instance like this:
 
-```
+```shell
 make redis-start
 ```
 
@@ -40,9 +40,9 @@ make redis-start
 
 First thing is initializing Cache Money and decorating a function that you want to cache
 
-```
+```python
 from cache_money import cache_money, init_cache_money
-from cache_money.constants import CACHE_HOUR
+from cache_money.constants import CACHE_HOUR, CACHE_WEEK
 
 init_cache_money(host="localhost")
 
@@ -50,30 +50,30 @@ init_cache_money(host="localhost")
 async def addition(x: int, y: int) -> int:
     return x + y
 
-@cache_money.cached(timeout=CACHE_HOUR)
+@cache_money.cached(timeout=CACHE_WEEK)
 async def multiplication(x: int, y: int) -> int:
     return x * y
 ```
 
 If you run the following calls to the function `addition` consecutively:
-```
-  >> await addition(3, 4)
+```doctest
+  >>> await addition(3, 4)
   7
   
-  >> await addition(3, 7)
+  >>> await addition(3, 7)
   10
  
-  >> await addition(3, 4)
+  >>> await addition(3, 4)
   7
 ```
-  
+
 The first and second call would be executed, but the third call would have used the cache in redis instead, as long 
 as the third call was done within one hour of when the first call was made, as the function addition is caching results 
 for one hour.
 
 In Redis you would see two entries like this:
 
-```
+```shell
 # redis-cli 
 
 127.0.0.1:6379> KEYS *
@@ -88,7 +88,7 @@ In Redis you would see two entries like this:
 
 You can force expire (bust) the cache for a specific function call
 
-```
+```doctest
 >> await addition(3, 4)
 >> await addition(3, 7)
 >> await addition.bust(3, 4)
@@ -96,7 +96,7 @@ You can force expire (bust) the cache for a specific function call
 
 In Redis you would see one entry as the other one has been busted
 
-```
+```shell
 127.0.0.1:6379> KEYS *
 1) "addition:bb6b7afb6a6cf3191f6d7fd35d976d42"
 ```
@@ -106,7 +106,7 @@ In Redis you would see one entry as the other one has been busted
 
 You can bust the cache for all instance of a function call
 
-```
+```doctest
 >> await addition(3, 4)
 >> await addition(3, 7)
 >> await multiplication(2, 4)
@@ -116,7 +116,7 @@ You can bust the cache for all instance of a function call
 In Redis you would see no entries for the function `addition` which has been busted,
 you would see one entry for `multiplication`
 
-```
+```shell
 127.0.0.1:6379> KEYS *
 1) "multiplication:bc3b7afc6a7cf3191f6d1fd31d810d55"
 ```
@@ -126,7 +126,7 @@ you would see one entry for `multiplication`
 
 You can bust the cache of all entries made by Cache Money as well
 
-```
+```doctest
 >> await addition(3, 4)
 >> await addition(3, 7)
 >> await multiplication(2, 4)
@@ -135,7 +135,7 @@ You can bust the cache of all entries made by Cache Money as well
 
 In Redis you would see no entries
 
-```
+```shell
 127.0.0.1:6379> KEYS *
 (empty array)
 ```
@@ -146,7 +146,7 @@ In Redis you would see no entries
 To set yourself up for development on Cache Money, make sure you are using
 [poetry](https://poetry.eustace.io/docs/) and simply run the following commands from the root directory:
 
-```bash
+```shell
 make sys-deps
 make install
 ```
