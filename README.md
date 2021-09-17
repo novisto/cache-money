@@ -1,6 +1,10 @@
 # Cache Money
 
+[![Build Status](https://dev.azure.com/novisto/novisto/_apis/build/status/novisto.cache-money?branchName=master)](https://dev.azure.com/novisto/novisto/_build/latest?definitionId=30&branchName=master)
 [![Coverage Status](https://coveralls.io/repos/github/novisto/cache-money/badge.svg)](https://coveralls.io/github/novisto/cache-money)
+[![License](https://img.shields.io/pypi/l/cache-money)](https://pypi.org/project/cache-money/)
+[![Version](https://img.shields.io/pypi/v/cache-money)](https://pypi.org/project/cache-money/)
+[![Python Version](https://img.shields.io/pypi/pyversions/cache-money)](https://pypi.org/project/cache-money/)
 
 Async cache library for [memoization](https://en.wikipedia.org/wiki/Memoization) using Redis. Inspired by 
 [Walrus](https://github.com/coleifer/walrus) and implemented with [aioredis](https://github.com/aio-libs/aioredis-py).
