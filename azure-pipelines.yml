@@ -1,0 +1,52 @@
+name: $(Date:yyyyMMdd).$(Rev:r)-$(Build.SourceBranchName)
+
+pr:
+  branches:
+    include:
+      - master
+
+trigger:
+  branches:
+    include:
+      - master
+
+variables:
+  dockerRegistryServiceConnection: '0718fd53-7517-42de-9ace-096cfbd39374'
+  containerRegistry: 'novisto.azurecr.io'
+  vmImageName: 'ubuntu-latest'
+
+stages:
+  - stage: PRTest
+    displayName: CI
+    pool:
+      vmImage: $(vmImageName)
+    jobs:
+      - job: Tests
+        displayName: Lint and Tests
+        steps:
+          - task: Docker@2
+            displayName: Login to ACR
+            inputs:
+              command: login
+              containerRegistry: $(dockerRegistryServiceConnection)
+          - task: UsePythonVersion@0
+            displayName: 'Use Python 3.8'
+            inputs:
+              versionSpec: '3.8'
+          - script: make sys-deps
+            displayName: Install sys deps
+          - task: Cache@2
+            inputs:
+              path: .tox
+              key: 'v1 | tox | poetry.lock'
+              restoreKeys: |
+                v1 | tox
+          - script: poetry config http-basic.novisto $(PYPI_NOVISTO_USERNAME) $(PYPI_NOVISTO_PASSWORD)
+            displayName: Configure Poetry auth
+          - script: tox -e install
+            displayName: Install project deps
+          - script: tox -e lint
+            displayName: Lint
+          - script: tox -e tests
+            displayName: Run tests
+          # TODO: Add Coverage
