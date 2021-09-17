@@ -3,7 +3,7 @@ default:
 
 .PHONY: sys-deps install format lint tests build
 sys-deps:
-	pip install -U pre-commit poetry==1.0.10 tox tox-docker
+	pip install -U pre-commit "poetry>=1.1.8,<2" tox tox-docker coveralls
 	pre-commit install
 
 install:
@@ -22,7 +22,7 @@ tests:
 	poetry run pytest --cov-report term-missing --cov cache_money/ tests/
 
 redis-start:
-	docker run -d -p 63798:6379 --name cache_money redis:6.2.5
+	docker run -d -p 63798:6379 --name cache_money_redis redis:6.2.5
 
 redis-stop:
-	docker stop cache_money
+	docker stop cache_money_redis
