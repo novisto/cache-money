@@ -1,0 +1,44 @@
+name: $(Date:yyyyMMdd).$(Rev:r)-$(Build.SourceBranchName)
+
+pr:
+  branches:
+    include:
+      - master
+
+trigger:
+  branches:
+    include:
+      - master
+
+variables:
+  vmImageName: 'ubuntu-latest'
+
+stages:
+  - stage: PRTest
+    displayName: CI
+    pool:
+      vmImage: $(vmImageName)
+    jobs:
+      - job: Tests
+        displayName: Lint and Tests
+        steps:
+          - task: UsePythonVersion@0
+            displayName: 'Use Python 3.8'
+            inputs:
+              versionSpec: '3.8'
+          - script: make sys-deps
+            displayName: Install sys deps
+          - task: Cache@2
+            inputs:
+              path: .tox
+              key: 'v1 | tox | poetry.lock'
+              restoreKeys: |
+                v1 | tox
+          - script: tox -e install
+            displayName: Install project deps
+          - script: tox -e lint
+            displayName: Lint
+          - script: tox -e tests
+            displayName: Run tests
+          - script: coveralls
+            displayName: Coveralls

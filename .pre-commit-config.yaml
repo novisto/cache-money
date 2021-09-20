@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: lint
+        name: Lint
+        language: system
+        entry: make lint
+        types:
+          - python
