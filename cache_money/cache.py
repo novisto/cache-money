@@ -1,4 +1,5 @@
 import hashlib
+import inspect
 import logging
 import pickle
 from functools import wraps
@@ -145,9 +146,7 @@ class CacheMoney(object):
         keys = await self.keys(decode_to_str=False)
         return await self.delete(keys)
 
-    async def keys(
-        self, function: Union[str, Callable] = "", decode_to_str: bool = True
-    ) -> Union[List[bytes], List[str]]:
+    async def keys(self, function: Callable = None, decode_to_str: bool = True) -> Union[List[bytes], List[str]]:
         """
         Return keys from Redis that were cached by Cache Money. Note that if the parameter function is not provided and
         Cache Money doesn't have a value for its prefix attribute, all keys in the Redis DB will be returned, even if
@@ -164,9 +163,9 @@ class CacheMoney(object):
         if not self.enabled:
             return []
 
-        function = function.__name__ if not isinstance(function, str) else function
+        function_name = f"{inspect.getmodule(function).__name__}:{function.__name__}" if function else ""
 
-        keys = await self.conn.keys(self.make_key(function) + "*")
+        keys = await self.conn.keys(self.make_key(function_name) + "*")
         if decode_to_str:
             keys = [decode(key) for key in keys]
         return keys
@@ -205,8 +204,8 @@ class CacheMoney(object):
 
         def decorator(fn):
             def make_key(args, kwargs):
-                """Apply the name of the function in front of the key, separated by a colon `:`."""
-                return f"{fn.__name__}:{key_fn(args, kwargs)}"
+                """Apply the module and name of the function in front of the key, separated by a colon `:`."""
+                return f"{inspect.getmodule(fn).__name__}:{fn.__name__}:{key_fn(args, kwargs)}"
 
             async def bust(*args, **kwargs):
                 """Bust a specific cache entry for the decorated function that match the provided args and kwargs."""
