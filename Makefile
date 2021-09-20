@@ -3,7 +3,7 @@ default:
 
 .PHONY: sys-deps install format lint tests build
 sys-deps:
-	pip install -U pre-commit "poetry>=1.1.8,<2" tox tox-docker coverage coveragepy
+	pip install -U pre-commit "poetry>=1.1.8,<2" tox tox-docker "coverage>=5.5" "coveragepy>=1.6"
 	pre-commit install
 
 install:
