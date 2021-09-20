@@ -8,8 +8,7 @@ sys-deps:
 		"poetry>=1.1.8,<2" \
 		"tox>=3.24,<4" \
 		"tox-docker>=3.1,<4" \
-		"coverage>=5.5,<6" \
-		"coveragepy>=1.6,<2"
+		"coverage>=5.5,<6"
 	pre-commit install
 
 install:
