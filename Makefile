@@ -19,7 +19,7 @@ lint:
 	poetry run flake8 $(LINT_TARGETS)
 
 tests:
-	poetry run pytest --cov cache_money/ tests/
+	poetry run pytest --cov cache_money/
 
 redis-start:
 	docker run -d -p 63798:6379 --name cache_money_redis redis:6.2.5

@@ -40,5 +40,6 @@ stages:
             displayName: Lint
           - script: tox -e tests
             displayName: Run tests
+          - script: ls -al
           - script: bash <(curl -s https://codecov.io/bash)
             displayName: Coverage Reporting
