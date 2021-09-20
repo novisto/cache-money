@@ -2,7 +2,7 @@
 name = "cache-money"
 version = "1.0.0"
 description = "Async cache decorator for memoization using aioredis."
-authors = ["Alexandre Jutras <alexandre.jutras@novisto.com>"]
+authors = ["Alexandre Jutras <alexandre.jutras@novisto.com>", "Marc-André Dufresne <marc-andre.dufresne@novisto.com"]
 readme = "README.md"
 
 packages = [
