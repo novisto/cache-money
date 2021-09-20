@@ -77,8 +77,8 @@ In Redis you would see two entries like this:
 # redis-cli 
 
 127.0.0.1:6379> KEYS *
-1) "addition:ea53056bad64a599c84efdfd4f4cbb64"
-2) "addition:bb6b7afb6a6cf3191f6d7fd35d976d42"
+1) "__main__:addition:ea53056bad64a599c84efdfd4f4cbb64"
+2) "__main__:addition:bb6b7afb6a6cf3191f6d7fd35d976d42"
 
 127.0.0.1:6379> TTL addition:ea53056bad64a599c84efdfd4f4cbb64
 (integer) 3403
@@ -98,7 +98,7 @@ In Redis you would see one entry as the other one has been busted
 
 ```shell
 127.0.0.1:6379> KEYS *
-1) "addition:bb6b7afb6a6cf3191f6d7fd35d976d42"
+1) "__main__:addition:bb6b7afb6a6cf3191f6d7fd35d976d42"
 ```
 
 
@@ -118,7 +118,7 @@ you would see one entry for `multiplication`
 
 ```shell
 127.0.0.1:6379> KEYS *
-1) "multiplication:bc3b7afc6a7cf3191f6d1fd31d810d55"
+1) "__main__:multiplication:bc3b7afc6a7cf3191f6d1fd31d810d55"
 ```
 
 

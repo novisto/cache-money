@@ -1,7 +1,7 @@
 import asyncio
 
 from cache_money import cache_money, init_cache_money
-from cache_money.constants import CACHE_HOUR, CACHE_MINUTE
+from cache_money.constants import CACHE_MINUTE
 
 init_cache_money(host="localhost", prefix="example")
 executions = 0
