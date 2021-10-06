@@ -95,7 +95,12 @@ class CacheMoney(object):
         if timeout is None:
             timeout = self.default_timeout
 
-        pickled_value = pickle.dumps(value)
+        try:
+            pickled_value = pickle.dumps(value)
+        except Exception:
+            log.exception(f"Error pickling object for caching: key=[{key}]; value type=[{type(value)}]")
+            return False
+
         try:
             if timeout:
                 return await self.conn.setex(key, int(timeout), pickled_value)
