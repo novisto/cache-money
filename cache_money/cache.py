@@ -98,7 +98,7 @@ class CacheMoney(object):
         try:
             pickled_value = pickle.dumps(value)
         except Exception:
-            log.exception(f"Error pickling object for caching; key=[{key}]; value type=[{type(value)}]")
+            log.exception(f"Error pickling object for caching: key=[{key}]; value type=[{type(value)}]")
             return False
 
         try:
