@@ -9,7 +9,7 @@ import aioredis
 
 from cache_money import engine
 from cache_money.constants import CACHE_HOUR
-from cache_money.utils import decode
+from cache_money.utils import decode, get_function_path
 
 log = logging.getLogger(__name__)
 
@@ -61,17 +61,26 @@ class CacheMoney(object):
             return ":".join((self.prefix, keys)) if self.prefix else keys
         return [(":".join((self.prefix, k)) if self.prefix else k) for k in keys]
 
-    async def get(self, key: str, default: Any = None) -> Any:
+    async def get(self, key: str, default: Any = None, transform_key: bool = True) -> Any:
         """
         Retrieve a value from the cache. In the event the value does not exist, return the `default`.
 
         Trying to access a non-existing key in Redis returns None from aioredis. This effectively makes `None` a non
         cacheable value for Cache Money.
+
+        Params:
+            key: The redis key to get.
+            default: The default value to return in case that the value cannot be retrieved.
+            transform_key: Whether to apply the transformation function to the key (make_key).
+
+        Returns:
+            The value stored in redis (de-pickled) or the default value.
         """
         if not self.enabled:
             return default
 
-        key = self.make_key(key)
+        if transform_key:
+            key = self.make_key(key)
 
         try:
             value = await self.conn.get(key)
@@ -80,18 +89,33 @@ class CacheMoney(object):
             return default
 
         if value is not None:
-            return pickle.loads(value)
+            try:
+                return pickle.loads(value)
+            except Exception:
+                log.exception(f"Exception trying to load the pickled object from key [{key}]")
+                return default
         else:
             return value
 
-    async def set(self, key: str, value: Any, timeout: int = None) -> bool:
+    async def set(self, key: str, value: Any, timeout: int = None, transform_key: bool = True) -> bool:
         """
         Cache the given `value` in the specified `key`. If no timeout is specified, the default timeout will be used.
+
+        Params:
+            key: The redis key to set.
+            value: The raw value to set (will be pickled).
+            timeout: The timeout to set in Redis (in seconds)
+            transform_key: Whether to apply the transformation function to the key (make_key).
+
+        Returns:
+            True if the set was successful, False otherwise.
         """
         if not self.enabled:
             return True
 
-        key = self.make_key(key)
+        if transform_key:
+            key = self.make_key(key)
+
         if timeout is None:
             timeout = self.default_timeout
 
@@ -168,9 +192,9 @@ class CacheMoney(object):
         if not self.enabled:
             return []
 
-        function_name = f"{inspect.getmodule(function).__name__}:{function.__name__}" if function else ""
+        function_path = get_function_path(function) if function else ""
 
-        keys = await self.conn.keys(self.make_key(function_name) + "*")
+        keys = await self.conn.keys(self.make_key(function_path) + "*")
         if decode_to_str:
             keys = [decode(key) for key in keys]
         return keys
@@ -210,7 +234,7 @@ class CacheMoney(object):
         def decorator(fn):
             def make_key(args, kwargs):
                 """Apply the module and name of the function in front of the key, separated by a colon `:`."""
-                return f"{inspect.getmodule(fn).__name__}:{fn.__name__}:{key_fn(args, kwargs)}"
+                return f"{inspect.getmodule(fn).__name__}.{fn.__name__}:{key_fn(args, kwargs)}"
 
             async def bust(*args, **kwargs):
                 """Bust a specific cache entry for the decorated function that match the provided args and kwargs."""
