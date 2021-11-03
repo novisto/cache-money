@@ -67,6 +67,14 @@ class CacheMoney(object):
 
         Trying to access a non-existing key in Redis returns None from aioredis. This effectively makes `None` a non
         cacheable value for Cache Money.
+
+        Params:
+            key: The redis key to get.
+            default: The default value to return in case that the value cannot be retrieved.
+            transform_key: Whether to apply the transformation function to the key (make_key).
+
+        Returns:
+            The value stored in redis (de-pickled) or the default value.
         """
         if not self.enabled:
             return default
@@ -92,6 +100,15 @@ class CacheMoney(object):
     async def set(self, key: str, value: Any, timeout: int = None, transform_key: bool = True) -> bool:
         """
         Cache the given `value` in the specified `key`. If no timeout is specified, the default timeout will be used.
+
+        Params:
+            key: The redis key to set.
+            value: The raw value to set (will be pickled).
+            timeout: The timeout to set in Redis (in seconds)
+            transform_key: Whether to apply the transformation function to the key (make_key).
+
+        Returns:
+            True if the set was successful, False otherwise.
         """
         if not self.enabled:
             return True
