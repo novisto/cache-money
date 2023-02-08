@@ -5,7 +5,7 @@ import pickle
 from functools import wraps
 from typing import Any, Callable, List, Optional, Union
 
-import aioredis
+import redis.asyncio
 
 from cache_money import engine
 from cache_money.constants import CACHE_HOUR
@@ -21,14 +21,14 @@ class CacheMoney(object):
     """
 
     def __init__(self):
-        self.conn: Optional[aioredis.client.Redis] = None
+        self.conn: Optional[redis.asyncio.Redis] = None
         self.prefix: Optional[str] = None
         self.default_timeout: Optional[int] = None
         self.enabled: bool = False
 
     def setup_cache(
         self,
-        conn: Optional[aioredis.client.Redis] = None,
+        conn: Optional[redis.asyncio.Redis] = None,
         prefix: Optional[str] = None,
         default_timeout: Optional[int] = None,
         enabled: bool = False,
