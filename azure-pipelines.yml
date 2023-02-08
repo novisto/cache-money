@@ -23,17 +23,17 @@ stages:
         displayName: Lint and Tests
         steps:
           - task: UsePythonVersion@0
-            displayName: 'Use Python 3.8'
+            displayName: 'Use Python 3.11'
             inputs:
-              versionSpec: '3.8'
+              versionSpec: '3.11'
           - script: make sys-deps
             displayName: Install sys deps
           - task: Cache@2
             inputs:
               path: .tox
-              key: 'v1 | tox | poetry.lock'
+              key: 'v2 | tox | poetry.lock'
               restoreKeys: |
-                v1 | tox
+                v2 | tox
           - script: tox -e install
             displayName: Install project deps
           - script: tox -e lint
