@@ -8,7 +8,7 @@ from cache_money.constants import CACHE_MINUTE
 executions: int = 0
 
 
-init_cache_money(host="localhost", prefix="cache_money_test", port=os.getenv("REDIS_6379_TCP_PORT", 63798))
+init_cache_money(host="localhost", prefix="cache_money_test", port=os.getenv("REDIS_6379_TCP_PORT", 6379))
 
 
 @cache_money.cached(timeout=CACHE_MINUTE)
