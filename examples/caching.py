@@ -14,36 +14,36 @@ async def addition(x: int, y: int) -> int:
 
 
 async def cached_calls():
-    print(f"\nCalling addition(3, 4)")
+    print("\nCalling addition(3, 4)")
     print(await addition(3, 4))
 
-    print(f"\nCalling addition(3, 7)")
+    print("\nCalling addition(3, 7)")
     print(await addition(3, 7))
 
-    print(f"\nCalling addition(3, 4)")
+    print("\nCalling addition(3, 4)")
     print(await addition(3, 4))
 
 
 async def busting():
-    print(f"\nBusting cache for addition(3, 4)")
+    print("\nBusting cache for addition(3, 4)")
     await addition.bust(3, 4)
 
-    print(f"\nCalling addition(3, 4)")
+    print("\nCalling addition(3, 4)")
     print(await addition(3, 4))
 
-    print(f"\nCalling addition(3, 4)")
+    print("\nCalling addition(3, 4)")
     print(await addition(3, 4))
 
-    print(f"\nCalling addition(3, 7)")
+    print("\nCalling addition(3, 7)")
     print(await addition(3, 7))
 
-    print(f"\nBusting cache for all cache entries for function addition")
+    print("\nBusting cache for all cache entries for function addition")
     await addition.bust_all()
 
-    print(f"\nCalling addition(3, 4)")
+    print("\nCalling addition(3, 4)")
     print(await addition(3, 4))
 
-    print(f"\nCalling addition(3, 7)")
+    print("\nCalling addition(3, 7)")
     print(await addition(3, 7))
 
 
