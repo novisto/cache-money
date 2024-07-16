@@ -27,7 +27,6 @@ jobs:
       - name: Lint
         run: tox run -e lint
       - name: Run tests
-        if: ${{ !inputs.skip_tests }}
         run: tox run -e tests
       - name: Coverage reporting
         run: bash <(curl -s https://codecov.io/bash)
